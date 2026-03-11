@@ -123,3 +123,29 @@ Run the smoke tests:
 uv run pytest
 uv run python -m scripts.smoke_test --clang "$LLVM13_ROOT/bin/clang"
 ```
+
+## Technical backgrounds
+
+In a 3-way merge scenario there're 4 versions of programs in the play:
+the two versions on the HEAD commit on two branches to be merge (referred to as A and B, resp.),
+the version at the LCA (Lowest Common Acestor) commit of the two branches (the base program, referred to as O),
+and the merge candidate (referred to as M).
+
+The definition of semantic merge conflict is introduced in the OOPSLA'18 paper [Verified three-way program merge](https://dl.acm.org/doi/abs/10.1145/3276535).
+
+Formally, *semantic conflict-freedom* requires the observable outputs of the 4-tuple of program versions $(O, A, B, M)$ in a 3-way merge scenario satisfy the following relations:
+
+if for all valuations $\sigma$ such that:
+$$
+\sigma \vdash O \Downarrow \sigma_{O} \quad \sigma \vdash A \Downarrow \sigma_{A} \quad \sigma  \vdash B \Downarrow \sigma_{B} \quad \sigma \vdash M \Downarrow \sigma_{M}
+$$
+
+the following condition hold for all $i$:
+
+1. If $\sigma_{O}[(out, i)] \neq \sigma_{A}[(out, i)]$, then $\sigma_{M}[(out, i)] = \sigma_{B}[(out, i)]$
+2. If $\sigma_{O}[(out, i)] \neq \sigma_{B}[(out, i)]$, then $\sigma_{M}[(out, i)] = \sigma_{A}[(out, i)]$
+3. Otherwise, $\sigma_{O}[(out, i)] = \sigma_{A}[(out, i)] = \sigma_{B}[(out, i)] = \sigma_{M}[(out, i)]$
+
+Where $out$ is the observable output vector of the program. 
+
+In short, semantic conflict-freedom requires the 4 versions of the programs to reach some sort of agreement of the program semantic, rather than syntax.
