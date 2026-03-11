@@ -2,6 +2,9 @@ __pycache__
 *.log
 *.smt2
 tmp/
+.venv/
+.pytest_cache/
+third_party/klee-build/
 
 # .vscode
 *.code-workspace

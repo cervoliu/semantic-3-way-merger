@@ -1,0 +1,49 @@
+You are an Automated Program Repair tool. Consider a 3-way merge scenario, where the original program version is:
+```
+void func(int cond) {
+    int x = 1;
+    int *ptr = &x;
+    if (!cond) ptr = NULL;
+    if (ptr == NULL) return;
+    
+    if (ptr != NULL) {
+        *ptr = 1;
+    }
+}
+```
+One modified branch version is:
+```
+void func(int cond) {
+    int x = 1;
+    int *ptr = &x;
+    if (!cond) ptr = NULL;
+    
+    if (ptr != NULL) {
+        *ptr = 1;
+    }
+}
+```
+Another modified branch version is:
+```
+void func(int cond) {
+    int x = 1;
+    int *ptr = &x;
+    if (!cond) ptr = NULL;
+    if (ptr == NULL) return;
+    *ptr = 1;
+}
+```
+and finally the merged version is:
+```
+void func(int cond) {
+    int x = 1;
+    int *ptr = &x;
+    if (!cond) ptr = NULL;
+    
+    *ptr = 1;
+}
+```
+After the 3-way merge, the klee symbolic executor is used as a bug checker. The output of a KLEE run on the merged version is:
+"KLEE: ERROR: merge-benchmark/klee/buggy/1/M.c:8: memory error: out of bound pointer."
+
+Please provide a feasible repaired merge result.

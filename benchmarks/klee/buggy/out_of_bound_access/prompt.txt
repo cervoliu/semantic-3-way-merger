@@ -1,0 +1,48 @@
+Here is a three way merge scenario, where version M is merged by applying 3-way merge on version O, A and B.
+
+Version O:
+```
+void func() {
+    int x = 6, y = 6, z = 0;
+    
+    int a[10];
+
+    int res = a[z];
+}
+```
+
+Version A:
+```
+void func() {
+    int x = 6, y = 6, z = 0;
+    z += x;
+    int a[10];
+
+    int res = a[z];
+}
+```
+
+Version B:
+```
+void func() {
+    int x = 6, y = 6, z = 0;
+    
+    int a[10];
+    z += y;
+    int res = a[z];
+}
+```
+
+Version M:
+```
+void func() {
+    int x = 6, y = 6, z = 0;
+    z += x;
+    int a[10];
+    z += y;
+    int res = a[z];
+}
+```
+
+However, there's a "memory error: out of bound pointer" on line 6 in version M.
+Please generate a repaired version M:

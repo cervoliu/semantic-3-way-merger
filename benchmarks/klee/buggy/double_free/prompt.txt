@@ -1,0 +1,64 @@
+You are an Automated Program Repair tool. Consider a 3-way merge scenario, where the original program version(O.c) is:
+```
+void func(int cond) {
+    int *ptr = malloc(sizeof(int));
+    if (cond) {
+        free(ptr);
+        return;
+    }
+
+
+
+    int tmp;
+    
+}
+```
+One modified branch version(A.c) is:
+```
+void func(int cond) {
+    int *ptr = malloc(sizeof(int));
+    if (cond) {
+        free(ptr);
+        return;
+    }
+    else {
+        free(ptr);
+    }
+    int tmp;
+    
+}
+```
+The other modified branch version(B.c) is:
+```
+void func(int cond) {
+    int *ptr = malloc(sizeof(int));
+    if (cond) {
+        free(ptr);
+        return;
+    }
+
+
+
+    int tmp;
+    free(ptr);
+}
+```
+and finally the merged version(M.c) is:
+```
+void func(int cond) {
+    int *ptr = malloc(sizeof(int));
+    if (cond) {
+        free(ptr);
+        return;
+    }
+    else {
+        free(ptr);
+    }
+    int tmp;
+    free(ptr);
+}
+```
+After the 3-way merge, the klee symbolic executor is used as a bug checker. The output of a KLEE run on the merged version is:
+KLEE: ERROR: M.c:11: memory error: double free
+
+Please provide a feasible repaired merge result.

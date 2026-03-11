@@ -1,0 +1,60 @@
+Here is a three way merge scenario, where version M is merged by applying 3-way merge on version O, A and B.
+
+Version O:
+```
+int func(int n, int m) {
+    if (n + m == 0) {
+        return 0;
+    }
+    int x = m;
+    if (m == 0) return 0;
+    int t;
+    t = n % m;
+    return t;
+}
+```
+
+Version A:
+```
+int func(int n, int m) {
+    if (n + m == 0) {
+        return -1;
+    }
+    int x = m;
+    if (m == 0) return 0;
+    int t;
+    t = n % x + 1;
+    return t;
+}
+```
+
+Version B:
+```
+int func(int n, int m) {
+    if (n + m == 0) {
+        return 0;
+    }
+    int x = 0;
+    if (m == 0) return 0;
+    int t;
+    t = n % m;
+    return t;
+}
+```
+
+Version M:
+```
+int func(int n, int m) {
+    if (n + m == 0) {
+        return -1;
+    }
+    int x = 0;
+    if (m == 0) return 0;
+    int t;
+    t = n % x + 1;
+    return t;
+}
+```
+
+However, there's a "divide by zero" on line 8 in version M.
+Please generate a repaired version M:
