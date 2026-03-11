@@ -17,7 +17,7 @@ def check_path_equivalence(s : Solver, P, Q) -> bool:
     neg_equiv = Or(And(P, Not(Q)), And(Not(P), Q))
     return s.check(neg_equiv) == unsat
 
-def check_program_equivalence(dirA : str, dirB : str, verbose : bool) -> bool:
+def check_program_equivalence(dirA : str, dirB : str, verbose : bool = True) -> bool:
 
     sym = set()
     pA, pB = find_smt2_pairs(dirA, sym), find_smt2_pairs(dirB, sym)
