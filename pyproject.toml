@@ -1,0 +1,16 @@
+[project]
+name = "semantic-merger"
+version = "0.1.0"
+description = "Toy semantic merge checker for C programs using KLEE and Z3"
+requires-python = ">=3.12"
+dependencies = [
+    "z3-solver==4.16.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

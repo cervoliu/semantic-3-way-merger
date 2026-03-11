@@ -35,36 +35,32 @@ def compute_shared_and_edits(fileA: str, fileO: str, fileB: str):
     A, O, B = tokenize_program(fileA), tokenize_program(fileO), tokenize_program(fileB)
     mapAO = compute_lcs(A, O)
     mapOB = compute_lcs(O, B)
-    map = []
-    shared = []
+    matches = []
     i, j = 0, 0
     while i < len(mapAO) and j < len(mapOB):
         if mapAO[i][1] == mapOB[j][0]:
-            map.append((mapAO[i][0], mapAO[i][1], mapOB[j][1]))
-            shared.append(O[mapAO[i][1]])
+            matches.append((mapAO[i][0], mapAO[i][1], mapOB[j][1]))
             i += 1
             j += 1
         else:
-            if shared[-1] is not None: shared.append(None) # mark a hole
             if mapAO[i][1] < mapOB[j][0]:
                 i += 1
             else:
                 j += 1
     
-    map.append((len(A), len(O), len(B)))
+    shared = []
     edits_A, edits_O, edits_B = [], [], []
-    holes = 0
-    for idx in range(len(map) - 1):
-        i1, j1, k1 = map[idx]
-        i2, j2, k2 = map[idx + 1]
-        
-        # Check for holes
+    sentinels = [(-1, -1, -1), *matches, (len(A), len(O), len(B))]
+    for idx in range(len(sentinels) - 1):
+        i1, j1, k1 = sentinels[idx]
+        i2, j2, k2 = sentinels[idx + 1]
         if i2 != i1 + 1 or j2 != j1 + 1 or k2 != k1 + 1:
-            holes += 1
-            # Extract edits for the current hole
+            shared.append(None)
             edits_A.append((A[i1 + 1:i2], i1 + 1, i2))
             edits_O.append((O[j1 + 1:j2], j1 + 1, j2))
             edits_B.append((B[k1 + 1:k2], k1 + 1, k2))
+        if idx + 1 < len(sentinels) - 1:
+            shared.append(O[j2])
     return shared, edits_A, edits_O, edits_B
 
 def apply(edits: List[List[str]], program: List[str]) -> List[str]:
